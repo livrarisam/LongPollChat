@@ -32,11 +32,14 @@ public class Chat {
             lock.lock();
             Result result = null;
        try {
-            User user = new User (id, name, screen);
+            User newUser = new User (id, name, screen);
+            users.add(newUser);            
+            for (User user : usersession.values()) {
+                user.notify(new Result(String.format("User %s joined the chat!", newUser.getName()), users));
+            }
 
-            usersession.put(id, user);
-            users.add(user);
-            result = new Result(String.format("Welcome %s!", user.getName()), users);
+            result = new Result(String.format("Welcome %s!", newUser.getName()), users);
+            usersession.put(id, newUser);            
         }
         finally {
             lock.unlock();
@@ -50,10 +53,14 @@ public class Chat {
             User sender = usersession.get(id);
             Message usermessage = new Message(message, sender);
             messages.add(usermessage);
+            if (messages.size() > 16) {
+                messages.remove(0);
+            }
             
             for (User user : usersession.values()) {
-                user.notify(new Result(messages, String.format("User %s sent a message!", sender.getName())));
-            }
+                user.notify(new Result(messages, String.format("User %s send a message!", sender.getName()), users));
+            }            
+            
         }
         finally {
             lock.unlock();

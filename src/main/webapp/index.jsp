@@ -3,7 +3,7 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Xavier's chat</title>
+        <title>Long Poll Chat</title>
         <script type="text/javascript" src="resources/js/jquery-1.7.2.min.js"></script>
         <script type="text/javascript" src="resources/js/knockout-2.0.0.js"></script>
         <script type="text/javascript" src="resources/js/knockout.mapping-latest.js"></script>
@@ -70,10 +70,13 @@
                     });
                 }
                 self.sendchat = function() {
-                    $.getJSON("/xavierchat/sendchat", {message: self.chatmessage()}, function(data) {
-                        self.chatmessage("");
-                        $("#chatmessage").focus();                        
-                    });
+                    if (self.chatmessage != "")
+                    {
+                        $.getJSON("/xavierchat/sendchat", {message: self.chatmessage()}, function(data) {
+                            self.chatmessage("");
+                            $("#chatmessage").focus();                        
+                        });
+                    }
                 }
 
                 self.parseResult = function(data)
@@ -88,6 +91,7 @@
 
                         }
                         if (data.users) {
+                            self.users.removeAll();                            
                             $.map(data.users, function(user) {
                                 self.users.push(user.name);
                             });

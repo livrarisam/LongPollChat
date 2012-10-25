@@ -1,7 +1,6 @@
 package br.com.senac.ccs.lpc;
 
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class Result {
 
@@ -21,15 +20,9 @@ public class Result {
         this.users = users;
     }
     
-    public Result( List<Message> messages, String notification ) {
-        this.messages = messages;
-        this.notification = notification;
-    }
-
     public Result( List<Message> messages, String notification, List<User> users ) {
         this.messages = messages;
         this.notification = notification;
-        this.users = users;
     }
 
     public List<Message> getMessages() {
